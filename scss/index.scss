@@ -18,8 +18,44 @@ body {
   grid-template-rows: repeat(4, 1fr);
   grid-template-columns: repeat(5, 1fr);
   grid-gap: 15px;
+  perspective: 600px;
 }
 
 .card {
-  background-color: red;
+  transition: all 0.5s ease;
+  transform-style: preserve-3d;
+  position: relative;
+  backface-visibility: hidden;
+
+  &__front,
+  &__back {
+    pointer-events: none;
+    backface-visibility: hidden;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    border-radius: 10px;
+  }
+
+  &__front {
+    transform: rotateY(180deg);
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: 1px solid lightgrey;
+    z-index: 10;
+    transition: all 0.5 ease;
+  }
+  &__back {
+    transform: rotateY(0deg);
+    background-color: dodgerblue;
+  }
+
+  &.flipped {
+    transform: rotateY(180deg);
+  }
+  &.completed {
+    transform: rotateY(180deg);
+    pointer-events: none;
+  }
 }

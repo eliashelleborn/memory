@@ -15,7 +15,34 @@ body {
   display: grid;
   grid-template-rows: repeat(4, 1fr);
   grid-template-columns: repeat(5, 1fr);
-  grid-gap: 15px; }
+  grid-gap: 15px;
+  perspective: 600px; }
 
 .card {
-  background-color: red; }
+  transition: all 0.5s ease;
+  transform-style: preserve-3d;
+  position: relative;
+  backface-visibility: hidden; }
+  .card__front, .card__back {
+    pointer-events: none;
+    backface-visibility: hidden;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    border-radius: 10px; }
+  .card__front {
+    transform: rotateY(180deg);
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: 1px solid lightgrey;
+    z-index: 10;
+    transition: all 0.5 ease; }
+  .card__back {
+    transform: rotateY(0deg);
+    background-color: dodgerblue; }
+  .card.flipped {
+    transform: rotateY(180deg); }
+  .card.completed {
+    transform: rotateY(180deg);
+    pointer-events: none; }
