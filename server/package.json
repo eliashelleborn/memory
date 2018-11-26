@@ -1,0 +1,48 @@
+{
+  "name": "express-boilerplate",
+  "version": "v0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon -w src --exec \"babel-node src --presets env\"",
+    "build": "babel src -s -D -d dist --presets env",
+    "start": "node dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Geggs/express-boilerplate.git"
+  },
+  "author": "Elias Johansson",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Geggs/express-boilerplate/issues"
+  },
+  "homepage": "https://github.com/Geggs/express-boilerplate#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "bluebird": "^3.5.1",
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
+    "dotenv": "^4.0.0",
+    "express": "^4.16.2",
+    "http-status": "^1.0.1",
+    "jwt-simple": "^0.5.1",
+    "moment-timezone": "^0.5.14",
+    "mongoose": "^4.13.7",
+    "passport": "^0.4.0",
+    "passport-jwt": "^3.0.1",
+    "socket.io": "^2.1.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0",
+    "eslint": "^4.19.1",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-node": "^5.2.1",
+    "eslint-plugin-promise": "^3.6.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "morgan": "^1.9.0"
+  }
+}
