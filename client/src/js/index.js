@@ -1,4 +1,25 @@
-import './scss/index.scss';
+import io from "socket.io-client";
+import "../scss/index.scss";
+
+let game = {};
+
+const socket = io("http://localhost:3030");
+const urlParams = new URLSearchParams(window.location.search);
+
+socket.on("connect", () => console.log("Connected to WS"));
+
+if (urlParams) {
+  socket.emit("joinRoom", {
+    user: { name: "User" + Math.random() },
+    room: urlParams.get("game")
+  });
+}
+
+socket.on("pairCompleted", () => console.log("Pair completed"));
+
+socket.on("userJoined", data => {
+  console.log(data);
+});
 
 const cards = [
   {
@@ -77,6 +98,7 @@ const unflipCards = cards => {
 
 const completeCards = cards => {
   console.log("Complete");
+  socket.emit("pairCompleted");
   cards.forEach(card => {
     card.classList.add("completed");
   });

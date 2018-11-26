@@ -4,11 +4,14 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "parcel index.html",
-    "build": "parcel build index.html"
+    "dev": "parcel src/*.html",
+    "build": "parcel build src/*.html"
   },
   "devDependencies": {
     "parcel-bundler": "^1.10.3",
     "sass": "^1.15.1"
+  },
+  "dependencies": {
+    "socket.io-client": "^2.1.1"
   }
 }
