@@ -2,7 +2,7 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import morgan from 'morgan'
 import cors from 'cors'
-import passport from 'passport'
+/* import passport from 'passport' */
 import routes from '../routes'
 import './passport'
 
@@ -16,7 +16,7 @@ app.use(morgan('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cors())
-app.use(passport.initialize())
+/* app.use(passport.initialize()) */
 
 // API Routes
 app.use('/api', routes)
