@@ -1,25 +1,67 @@
 import io from "socket.io-client";
 import "../scss/index.scss";
+import { debug } from "util";
 
 let game = {};
 
 const socket = io("http://localhost:3030");
 const urlParams = new URLSearchParams(window.location.search);
 
-socket.on("connect", () => console.log("Connected to WS"));
+socket.on("connect", () => {
+  console.log("Connected");
+  console.log(`Socket ID: ${socket.id}`);
+});
 
+// If correct URL params are given, try connecting to game room
 if (urlParams) {
-  socket.emit("joinRoom", {
-    user: { name: "User" + Math.random() },
+  socket.emit("join-room", {
+    user: { name: urlParams.get("name") },
     room: urlParams.get("game")
   });
 }
 
-socket.on("pairCompleted", () => console.log("Pair completed"));
+// Room responses on "join-room"
+socket.on("room-joined", data => updateGame(data));
+socket.on(
+  "room-not-found",
+  () =>
+    (document.querySelector(".response").innerHTML = "<h3>Room Not Found</h3>")
+);
+socket.on(
+  "room-full",
+  () =>
+    (document.querySelector(".response").innerHTML = `
+      <div>
+        <h3>Room is full</h3>
+        <p>Maximum amount of players for this room has been reached. 
+          <a href="javascript:window.location.href=window.location.href">Try again...</a>
+        </p>
+      </div>`)
+);
 
-socket.on("userJoined", data => {
-  console.log(data);
+socket.on("countdown", time => {
+  console.log(time);
 });
+
+socket.on("pair-completed", () => console.log("Pair Completed"));
+
+socket.on("player-joined", data => {
+  console.log("Player Joined");
+  updateGame(data);
+});
+socket.on("player-disconnected", data => {
+  console.log("Player Disconnected");
+  updateGame(data);
+});
+
+const updateGame = data => {
+  const players = document.querySelector(".players");
+  game = data;
+  players.innerHTML = "";
+  game.players.forEach(player => {
+    players.insertAdjacentHTML("beforeend", `<li>${player.name}</li>`);
+  });
+};
 
 const cards = [
   {

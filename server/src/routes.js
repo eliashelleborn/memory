@@ -4,6 +4,9 @@ import controller from './controller'
 
 const router = express.Router()
 
-router.route('/games').get(controller.list)
+router
+  .route('/games')
+  .get(controller.list)
+  .post(controller.create)
 
 export default router
