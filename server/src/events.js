@@ -1,16 +1,37 @@
 import SocketIO from 'socket.io'
 import { games } from './controller'
 
+const getGame = id => {
+  const gameIndex = games.findIndex(game => game.id === id)
+
+  return {
+    game: games[gameIndex],
+    gameIndex
+  }
+}
+
+const getPlayer = socket => {
+  const { game } = getGame(socket.currentGame)
+  console.log(game)
+  const playerIndex = game.players.findIndex(player => player.id === socket.id)
+
+  return {
+    player: game.players[playerIndex],
+    playerIndex
+  }
+}
+
+const startCountdown = (io, game, time) => {}
+
 const initEvents = server => {
   const io = new SocketIO(server)
 
   io.on('connection', socket => {
     socket.on('join-room', data => {
-      const i = games.findIndex(game => game.id === parseInt(data.room))
-      const game = games[i]
+      const { game, gameIndex } = getGame(data.room)
 
       // If game exists
-      if (i >= 0) {
+      if (gameIndex >= 0) {
         if (game.players.length >= game.settings.maxPlayers) {
           socket.emit('room-full')
         } else {
@@ -21,6 +42,7 @@ const initEvents = server => {
           const newPlayer = {
             id: socket.id,
             name: data.user.name,
+            status: 'waiting',
             stats: {
               pairsCompleted: 0,
               clicks: 0
@@ -30,39 +52,37 @@ const initEvents = server => {
 
           socket.emit('room-joined', game)
           socket.broadcast.to(data.room).emit('player-joined', game)
-
-          // Start countdown whem game is full
-          if (game.players.length === game.settings.maxPlayers) {
-            let time = 15
-            game.interval = setInterval(() => {
-              io.to(data.room).emit('countdown', time)
-              time-- || clearInterval(game.interval)
-            }, 1000)
-          }
         }
       } else {
         socket.emit('room-not-found')
       }
     })
 
-    socket.on('pair-completed', () => {
-      for (const roomIndex in socket.rooms) {
-        if (socket.rooms.hasOwnProperty(roomIndex)) {
-          const room = socket.rooms[roomIndex]
-          socket.broadcast.to(room).emit('pair-completed')
-        }
+    socket.on('player-ready', () => {
+      const { game } = getGame(socket.currentGame)
+      const { player } = getPlayer(socket)
+      player.status = 'ready'
+      socket.broadcast.to(game.id).emit('player-ready', player)
+
+      // Start countdown when game is full and all players are ready
+      const playersReady = game.players.every(p => p.status === 'ready')
+      if (game.players.length === game.settings.maxPlayers && playersReady) {
+        let time = 10
+        game.interval = setInterval(() => {
+          io.to(game.id).emit('countdown', time)
+          if (time === 0) {
+            clearInterval(game.interval)
+            io.to(game.id).emit('game-started')
+          }
+          time--
+        }, 1000)
       }
     })
 
     socket.on('disconnect', () => {
       if (socket.currentGame) {
-        const gameIndex = games.findIndex(
-          game => game.id === socket.currentGame
-        )
-        const playerIndex = games[gameIndex].players.findIndex(
-          player => player.id === socket.id
-        )
-        const game = games[gameIndex]
+        const { game } = getGame(socket.currentGame)
+        const { playerIndex } = getPlayer(socket)
 
         // Remove player and clear game interval
         game.players.splice(playerIndex, 1)

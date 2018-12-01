@@ -4,7 +4,7 @@ import { debug } from "util";
 
 let game = {};
 
-const socket = io("http://localhost:3030");
+const socket = io("http://192.168.0.6:3030");
 const urlParams = new URLSearchParams(window.location.search);
 
 socket.on("connect", () => {
@@ -39,11 +39,18 @@ socket.on(
       </div>`)
 );
 
+const readyBtn = document.querySelector(".readyBtn");
+readyBtn.addEventListener("click", () => {
+  socket.emit("player-ready");
+});
+
+socket.on("player-ready", () => console.log("Player ready"));
+
 socket.on("countdown", time => {
   console.log(time);
 });
 
-socket.on("pair-completed", () => console.log("Pair Completed"));
+socket.on("game-started", () => console.log("Game started!"));
 
 socket.on("player-joined", data => {
   console.log("Player Joined");

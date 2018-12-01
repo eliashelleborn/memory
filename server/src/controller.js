@@ -2,7 +2,7 @@ import httpStatus from 'http-status'
 
 export const games = [
   {
-    id: 1,
+    id: '1',
     status: 'lobby',
     startTime: null,
     interval: null,
@@ -23,7 +23,7 @@ export const games = [
     ]
   },
   {
-    id: 2,
+    id: '2',
     status: 'lobby',
     startTime: null,
     interval: null,
