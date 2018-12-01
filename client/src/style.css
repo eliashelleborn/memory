@@ -1,0 +1,200 @@
+/* ===== BASE ===== */
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+*:focus {
+  outline: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Poppins", sans-serif;
+}
+
+p {
+  margin: 0;
+}
+
+/* ===== LOBBY ===== */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #2b5876; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to right,
+    #4e4376,
+    #2b5876
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to right,
+    #4e4376,
+    #2b5876
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+.lobby {
+  width: 100%;
+  height: 100%;
+  max-width: 750px;
+  max-height: 500px;
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+}
+
+.lobby__header {
+  height: 75px;
+  width: 100%;
+  border-bottom: 3px solid rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-content: center;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.lobby__body {
+  flex: 1;
+  display: flex;
+}
+
+.lobby__players {
+  flex: 1;
+}
+
+.lobby__player {
+  display: flex;
+  padding: 15px 25px;
+}
+.lobby__player:nth-child(even) {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.lobby__player > p:first-child {
+  flex: 1;
+  font-size: 20px;
+}
+
+.lobby__player-status {
+  text-transform: capitalize;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.7);
+}
+.lobby__player-status--ready {
+  color: #20bf55;
+}
+
+.lobby__game-info {
+  width: 25%;
+  min-width: 250px;
+  border-left: 3px solid rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+.lobby__game-info ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lobby__game-info li {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.lobby__game-info li > span {
+  flex: 1;
+}
+
+.lobby__footer {
+  height: 75px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 25px;
+
+  background-color: rgba(0, 0, 0, 0.05);
+}
+.lobby__ready-btn {
+  background-color: rgba(0, 0, 0, 0.3);
+  border: none;
+  color: #fff;
+  padding: 15px 50px;
+  cursor: pointer;
+}
+.lobby__ready-btn:hover {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.lobby .countdown {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+.countdown.open {
+  display: flex;
+}
+
+/* ===== GAME ===== */
+.game-container {
+  width: 500px;
+  height: 500px;
+  display: grid;
+  grid-template-rows: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
+  grid-gap: 15px;
+  perspective: 600px;
+}
+
+.card {
+  transition: all 0.5s ease;
+  transform-style: preserve-3d;
+  position: relative;
+  backface-visibility: hidden;
+}
+.card__front,
+.card__back {
+  pointer-events: none;
+  backface-visibility: hidden;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  border-radius: 10px;
+}
+.card__front {
+  transform: rotateY(180deg);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: 1px solid lightgrey;
+  z-index: 10;
+  transition: all 0.5 ease;
+}
+.card__back {
+  transform: rotateY(0deg);
+  background-color: plum;
+}
+.card.flipped {
+  transform: rotateY(180deg);
+}
+.card.completed {
+  transform: rotateY(180deg);
+  pointer-events: none;
+}

@@ -12,7 +12,6 @@ const getGame = id => {
 
 const getPlayer = socket => {
   const { game } = getGame(socket.currentGame)
-  console.log(game)
   const playerIndex = game.players.findIndex(player => player.id === socket.id)
 
   return {
@@ -20,8 +19,6 @@ const getPlayer = socket => {
     playerIndex
   }
 }
-
-const startCountdown = (io, game, time) => {}
 
 const initEvents = server => {
   const io = new SocketIO(server)
@@ -51,7 +48,7 @@ const initEvents = server => {
           game.players.push(newPlayer)
 
           socket.emit('room-joined', game)
-          socket.broadcast.to(data.room).emit('player-joined', game)
+          socket.broadcast.to(data.room).emit('player-joined', newPlayer)
         }
       } else {
         socket.emit('room-not-found')
@@ -68,11 +65,13 @@ const initEvents = server => {
       const playersReady = game.players.every(p => p.status === 'ready')
       if (game.players.length === game.settings.maxPlayers && playersReady) {
         let time = 10
+        game.status = 'starting'
         game.interval = setInterval(() => {
           io.to(game.id).emit('countdown', time)
           if (time === 0) {
             clearInterval(game.interval)
             io.to(game.id).emit('game-started')
+            game.status = 'started'
           }
           time--
         }, 1000)
@@ -82,15 +81,16 @@ const initEvents = server => {
     socket.on('disconnect', () => {
       if (socket.currentGame) {
         const { game } = getGame(socket.currentGame)
-        const { playerIndex } = getPlayer(socket)
+        const { player, playerIndex } = getPlayer(socket)
 
         // Remove player and clear game interval
         game.players.splice(playerIndex, 1)
         clearInterval(game.interval)
+        game.status = 'lobby'
 
         socket.broadcast
           .to(socket.currentGame)
-          .emit('player-disconnected', game)
+          .emit('player-disconnected', player.id)
       }
     })
   })

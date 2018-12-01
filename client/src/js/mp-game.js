@@ -1,6 +1,10 @@
 import io from "socket.io-client";
-import "../scss/index.scss";
-import { debug } from "util";
+import {
+  addPlayer,
+  removePlayer,
+  updatePlayerStatus,
+  addGameInfo
+} from "./dom";
 
 let game = {};
 
@@ -21,16 +25,22 @@ if (urlParams) {
 }
 
 // Room responses on "join-room"
-socket.on("room-joined", data => updateGame(data));
+socket.on("room-joined", game => {
+  addGameInfo(game);
+  game.players.forEach(player => {
+    addPlayer(player);
+  });
+});
 socket.on(
   "room-not-found",
   () =>
-    (document.querySelector(".response").innerHTML = "<h3>Room Not Found</h3>")
+    (document.querySelector(".lobby__response").innerHTML =
+      "<h3>Room Not Found</h3>")
 );
 socket.on(
   "room-full",
   () =>
-    (document.querySelector(".response").innerHTML = `
+    (document.querySelector(".lobby__response").innerHTML = `
       <div>
         <h3>Room is full</h3>
         <p>Maximum amount of players for this room has been reached. 
@@ -39,7 +49,7 @@ socket.on(
       </div>`)
 );
 
-const readyBtn = document.querySelector(".readyBtn");
+const readyBtn = document.querySelector(".lobby__ready-btn");
 readyBtn.addEventListener("click", () => {
   socket.emit("player-ready");
 });
@@ -52,23 +62,23 @@ socket.on("countdown", time => {
 
 socket.on("game-started", () => console.log("Game started!"));
 
-socket.on("player-joined", data => {
+socket.on("player-joined", player => {
   console.log("Player Joined");
-  updateGame(data);
+  addPlayer(player);
 });
-socket.on("player-disconnected", data => {
+socket.on("player-disconnected", id => {
   console.log("Player Disconnected");
-  updateGame(data);
+  removePlayer(id);
 });
 
-const updateGame = data => {
-  const players = document.querySelector(".players");
+/* const updateGame = data => {
+  const players = document.querySelector(".lobby__players");
   game = data;
   players.innerHTML = "";
   game.players.forEach(player => {
     players.insertAdjacentHTML("beforeend", `<li>${player.name}</li>`);
   });
-};
+}; */
 
 const cards = [
   {
@@ -97,6 +107,7 @@ const cards = [
   }
 ];
 
+/*
 const gameSetup = () => {
   const cardElements = document.querySelectorAll(".card");
 
@@ -160,3 +171,4 @@ const cardElements = document.querySelectorAll(".card");
 cardElements.forEach(el => {
   el.addEventListener("click", ev => flipCard(ev.target));
 });
+ */

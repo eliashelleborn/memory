@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Memory</title>
+
+    <link
+      href="https://fonts.googleapis.com/css?family=Poppins:300,400,700"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="overlay">
+      <div class="lobby">
+        <div class="lobby__header"><h1>LOBBY</h1></div>
+        <div class="lobby__body">
+          <div class="lobby__players"></div>
+          <div class="lobby__game-info"></div>
+        </div>
+        <div class="lobby__footer">
+          <button class="lobby__ready-btn">Ready</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="game"></div>
+
+    <script src="js/mp-game.js"></script>
+  </body>
+</html>
