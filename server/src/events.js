@@ -74,14 +74,20 @@ const initEvents = server => {
 
     socket.on('disconnect', () => {
       if (socket.currentGame) {
-        const { game } = getGame(socket.currentGame)
+        const { game, gameIndex } = getGame(socket.currentGame)
         const { player, playerIndex } = getPlayer(socket)
 
-        // Remove player and clear game interval
-        game.players.splice(playerIndex, 1)
-        clearInterval(game.interval)
-        game.status = 'lobby'
+        if (game.status === 'starting') {
+          // Remove player and clear game interval
+          clearInterval(game.interval)
+          game.status = 'lobby'
+        }
 
+        if (game.players.length === 0) {
+          games.splice(gameIndex, 1)
+        }
+
+        game.players.splice(playerIndex, 1)
         socket.broadcast
           .to(socket.currentGame)
           .emit('player-disconnected', player.id)

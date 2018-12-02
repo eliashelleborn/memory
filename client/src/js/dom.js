@@ -10,7 +10,7 @@ export const addGameInfo = game => {
   gameInfoNode.insertAdjacentHTML("afterbegin", template);
 };
 
-export const addPlayer = player => {
+export const addLobbyPlayer = player => {
   const playersNode = document.querySelector(".lobby__players");
   const template = `
     <div class='lobby__player' data-player='${player.id}'>
@@ -21,7 +21,7 @@ export const addPlayer = player => {
   playersNode.insertAdjacentHTML("beforeend", template);
 };
 
-export const removePlayer = id => {
+export const removeLobbyPlayer = id => {
   const playerNode = document.querySelector(`[data-player='${id}']`);
   playerNode.remove();
 };
@@ -57,4 +57,38 @@ export const createCard = card => {
     </div>
   `;
   memoryNode.insertAdjacentHTML("beforeend", template);
+};
+
+export const addGamePlayers = (game, socket) => {
+  game.players.forEach(player => {
+    document
+      .querySelector(".game__players")
+      .insertAdjacentHTML(
+        "beforeend",
+        playerTemplate(player, player.id === socket.id, game.settings.pairs)
+      );
+  });
+};
+
+const playerTemplate = (player, isMe, pairCount) => {
+  let progressBlocks = "";
+  for (let i = 0; i < pairCount; i++) {
+    progressBlocks += "<div></div>";
+  }
+  return `
+    <div class="player" data-player="${player.id}">
+      <div class="player__header">
+        <h3 class="player__name">${player.name}</h3>
+        <p class="player__you">${isMe ? "(You)" : ""}</p>
+      </div>
+
+      <div class="player__clicks">
+        <span>Clicks: </span><span>0</span>
+      </div>
+
+      <div class="player__progress">
+        ${progressBlocks}
+      </div>
+    </div>
+  `;
 };

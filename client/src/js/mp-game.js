@@ -2,12 +2,13 @@ import io from "socket.io-client";
 import cards from "./cards";
 import { createBoard, initGame } from "./game";
 import {
-  addPlayer,
-  removePlayer,
+  addLobbyPlayer,
+  removeLobbyPlayer,
   updatePlayerStatus,
   addGameInfo,
   toggleLobby,
-  updateCountdown
+  updateCountdown,
+  addGamePlayers
 } from "./dom";
 
 const socket = io("http://192.168.0.6:3030");
@@ -32,7 +33,7 @@ if (urlParams) {
 socket.on("room-joined", game => {
   addGameInfo(game);
   game.players.forEach(player => {
-    addPlayer(player);
+    addLobbyPlayer(player);
   });
 });
 socket.on("room-not-found", () => {
@@ -64,12 +65,12 @@ socket.on("room-full", () => {
 // Lobby events
 socket.on("player-joined", player => {
   console.log("Player Joined");
-  addPlayer(player);
+  addLobbyPlayer(player);
 });
 
 socket.on("player-disconnected", id => {
   console.log("Player Disconnected");
-  removePlayer(id);
+  removeLobbyPlayer(id);
 
   if (gameStatus === "starting") toggleLobby();
 });
@@ -95,6 +96,7 @@ socket.on("countdown", time => {
 // Game events
 socket.on("game-setup", game => {
   createBoard(game.board);
+  addGamePlayers(game, socket);
 });
 
 socket.on("game-started", () => {
