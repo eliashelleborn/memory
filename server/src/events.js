@@ -93,6 +93,24 @@ const initEvents = server => {
           .emit('player-disconnected', player.id)
       }
     })
+
+    // Game Actions
+    socket.on('player-clicked', () => {
+      const { player } = getPlayer(socket)
+      player.stats.clicks++
+      socket.broadcast.to(socket.currentGame).emit('player-clicked', {
+        player: player.id,
+        clicks: player.stats.clicks
+      })
+    })
+    socket.on('player-completed-pair', () => {
+      const { player } = getPlayer(socket)
+      player.stats.pairsCompleted++
+      socket.broadcast.to(socket.currentGame).emit('player-completed-pair', {
+        player: player.id,
+        pairsCompleted: player.stats.pairsCompleted
+      })
+    })
   })
 }
 
@@ -101,7 +119,7 @@ const prepareGame = (io, socket, game) => {
   game.board = board
   io.to(game.id).emit('game-setup', game)
 
-  let time = 10
+  let time = 3
   game.status = 'starting'
   game.interval = setInterval(() => {
     io.to(game.id).emit('countdown', time)
