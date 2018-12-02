@@ -1,29 +1,32 @@
-import { createCard } from "./dom";
-
-export const initGame = () => {
-  const cardNodes = document.querySelectorAll(".card");
-  cardNodes.forEach(card => {
-    card.addEventListener("click", () => clickHandler(card));
-  });
-};
+import { createCard, updatePlayerClicks, updatePlayerProgress } from "./dom";
+import cards from "./cards";
 
 let prevCard = null;
 let completedPairs = 0;
+let clicks = 0;
 
-export const createBoard = cards => {
-  cards.forEach(cardIndex => {
-    createCard(cards[cardIndex]);
+export const initGame = socket => {
+  const cardNodes = document.querySelectorAll(".card");
+  cardNodes.forEach(card => {
+    card.addEventListener("click", () => clickHandler(card, socket));
   });
 };
 
-export const clickHandler = card => {
+const clickHandler = (card, socket) => {
   const cardName = card.getAttribute("data-cardName");
+  const isMP = !!socket;
 
   card.classList.toggle("flipped");
   const flippedCards = document.querySelectorAll(".card.flipped");
 
+  clicks++;
+  if (isMP) socket.emit("player-clicked");
+  updatePlayerClicks(socket.id, clicks);
+
   if (prevCard !== null) {
     if (cardName === prevCard) {
+      if (isMP) socket.emit("player-completed-pair");
+      updatePlayerProgress(socket.id, completedPairs);
       completeCards(flippedCards);
       prevCard = null;
     } else {
@@ -37,14 +40,20 @@ export const clickHandler = card => {
   }
 };
 
-const unflipCards = cards => {
+export const createBoard = board => {
+  board.forEach(cardIndex => {
+    createCard(cards[cardIndex]);
+  });
+};
+
+export const unflipCards = cards => {
   console.log("Unflip");
   cards.forEach(card => {
     card.classList.toggle("flipped");
   });
 };
 
-const completeCards = cards => {
+export const completeCards = cards => {
   console.log("Complete");
   socket.emit("pairCompleted");
   cards.forEach(card => {

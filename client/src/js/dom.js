@@ -1,3 +1,5 @@
+import cards from "./cards";
+
 /* ===== LOBBY ===== */
 export const addGameInfo = game => {
   const gameInfoNode = document.querySelector(".lobby__game-info");
@@ -47,12 +49,42 @@ export const updateCountdown = time => {
   }
 };
 
+/* ===== JOIN ROOM ERRORS ===== */
+export const roomNotFound = () => {
+  const overlayError = document.querySelector(".overlay__error");
+  overlayError.innerHTML = "<h3>Room Not Found</h3>";
+  overlayError.classList.add("overlay__error--visible");
+};
+
+export const gameAlreadyStarted = () => {
+  const overlayError = document.querySelector(".overlay__error");
+  overlayError.innerHTML = `
+      <div>
+        <h3>Game has already started</h3>
+        <p>You cannot join a game that has already started</p>
+      </div>`;
+  overlayError.classList.add("overlay__error--visible");
+};
+
+export const roomFull = () => {
+  const overlayError = document.querySelector(".overlay__error");
+  overlayError.innerHTML = `
+      <div>
+        <h3>Room is full</h3>
+        <p>Maximum amount of players for this room has been reached. 
+          <a href="javascript:window.location.href=window.location.href">Try again...</a>
+        </p>
+      </div>`;
+  overlayError.classList.add("overlay__error--visible");
+};
+
 /* ===== GAME ===== */
 export const createCard = card => {
   const memoryNode = document.querySelector(".memory");
+  console.log(card);
   const template = `
-    <div class="card">
-      <div class="card__front"></div>
+    <div class="card" data-cardName="${card.name}">
+      <div class="card__front" style="background-image: url(${card.img})"></div>
       <div class="card__back"></div>
     </div>
   `;
@@ -91,4 +123,18 @@ const playerTemplate = (player, isMe, pairCount) => {
       </div>
     </div>
   `;
+};
+
+export const updatePlayerClicks = (player, clicks) => {
+  const clicksNode = document.querySelector(
+    `[data-player="${player}"] .player__clicks`
+  );
+  clicksNode.lastElementChild.innerText = clicks;
+};
+
+export const updatePlayerProgress = (player, pairsCompleted) => {
+  const progressNode = document.querySelector(
+    `[data-player="${player}"] .player__progress`
+  );
+  progressNode.childNodes[pairsCompleted].classList.add("completed");
 };

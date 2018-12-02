@@ -207,10 +207,10 @@ p {
   grid-gap: 15px;
   perspective: 600px;
   position: relative;
+  padding: 15px;
 }
 
 .card {
-  background-color: #fff;
   height: 100%;
   transition: all 0.5s ease;
   transform-style: preserve-3d;
@@ -230,13 +230,13 @@ p {
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
-  border: 1px solid lightgrey;
+
   z-index: 10;
   transition: all 0.5 ease;
 }
 .card__back {
   transform: rotateY(0deg);
-  background-color: plum;
+  background-color: rgba(0, 0, 0, 0.3);
 }
 .card.flipped {
   transform: rotateY(180deg);
