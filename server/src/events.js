@@ -29,26 +29,30 @@ const initEvents = server => {
 
       // If game exists
       if (gameIndex >= 0) {
-        if (game.players.length >= game.settings.maxPlayers) {
-          socket.emit('room-full')
-        } else {
-          // Join room if game isnt full
-          socket.join(data.room)
-          socket.currentGame = game.id
+        if (game.status === 'lobby') {
+          if (game.players.length >= game.settings.maxPlayers) {
+            socket.emit('room-full')
+          } else {
+            // Join room if game isnt full
+            socket.join(data.room)
+            socket.currentGame = game.id
 
-          const newPlayer = {
-            id: socket.id,
-            name: data.user.name,
-            status: 'waiting',
-            stats: {
-              pairsCompleted: 0,
-              clicks: 0
+            const newPlayer = {
+              id: socket.id,
+              name: data.user.name,
+              status: 'waiting',
+              stats: {
+                pairsCompleted: 0,
+                clicks: 0
+              }
             }
-          }
-          game.players.push(newPlayer)
+            game.players.push(newPlayer)
 
-          socket.emit('room-joined', game)
-          socket.broadcast.to(data.room).emit('player-joined', newPlayer)
+            socket.emit('room-joined', game)
+            socket.broadcast.to(data.room).emit('player-joined', newPlayer)
+          }
+        } else {
+          socket.emit('room-already-started')
         }
       } else {
         socket.emit('room-not-found')
@@ -64,17 +68,7 @@ const initEvents = server => {
       // Start countdown when game is full and all players are ready
       const playersReady = game.players.every(p => p.status === 'ready')
       if (game.players.length === game.settings.maxPlayers && playersReady) {
-        let time = 10
-        game.status = 'starting'
-        game.interval = setInterval(() => {
-          io.to(game.id).emit('countdown', time)
-          if (time === 0) {
-            clearInterval(game.interval)
-            io.to(game.id).emit('game-started')
-            game.status = 'started'
-          }
-          time--
-        }, 1000)
+        prepareGame(io, socket, game)
       }
     })
 
@@ -94,6 +88,31 @@ const initEvents = server => {
       }
     })
   })
+}
+
+const prepareGame = (io, socket, game) => {
+  const board = createBoard(game.settings.pairs)
+  game.board = board
+  io.to(game.id).emit('game-setup', game)
+
+  let time = 10
+  game.status = 'starting'
+  game.interval = setInterval(() => {
+    io.to(game.id).emit('countdown', time)
+    if (time === 0) {
+      clearInterval(game.interval)
+      io.to(game.id).emit('game-started')
+      game.status = 'started'
+    }
+    time--
+  }, 1000)
+}
+
+const createBoard = pairCount => {
+  const cards = Array.from(Array(pairCount).keys())
+  const board = [...cards, ...cards]
+  board.sort(() => Math.random() - 0.5)
+  return board
 }
 
 export default initEvents
