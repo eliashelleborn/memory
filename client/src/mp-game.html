@@ -18,6 +18,7 @@
   </head>
   <body>
     <div class="overlay">
+      <div class="overlay__error"></div>
       <div class="lobby">
         <div class="lobby__header"><h1>LOBBY</h1></div>
         <div class="lobby__body">
@@ -30,7 +31,13 @@
       </div>
     </div>
 
-    <div class="game"></div>
+    <div class="game">
+      <div class="game__container">
+        <div class="game__countdown"><h1>10</h1></div>
+        <div class="memory"></div>
+      </div>
+      <div class="game__side"></div>
+    </div>
 
     <script src="js/mp-game.js"></script>
   </body>
