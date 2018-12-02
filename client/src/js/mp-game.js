@@ -1,15 +1,19 @@
 import io from "socket.io-client";
+import cards from "./cards";
+import { createBoard, initGame } from "./game";
 import {
   addPlayer,
   removePlayer,
   updatePlayerStatus,
-  addGameInfo
+  addGameInfo,
+  toggleLobby,
+  updateCountdown
 } from "./dom";
-
-let game = {};
 
 const socket = io("http://192.168.0.6:3030");
 const urlParams = new URLSearchParams(window.location.search);
+
+let gameStatus = "lobby";
 
 socket.on("connect", () => {
   console.log("Connected");
@@ -31,86 +35,75 @@ socket.on("room-joined", game => {
     addPlayer(player);
   });
 });
-socket.on(
-  "room-not-found",
-  () =>
-    (document.querySelector(".lobby__response").innerHTML =
-      "<h3>Room Not Found</h3>")
-);
-socket.on(
-  "room-full",
-  () =>
-    (document.querySelector(".lobby__response").innerHTML = `
+socket.on("room-not-found", () => {
+  const overlayError = document.querySelector(".overlay__error");
+  overlayError.innerHTML = "<h3>Room Not Found</h3>";
+  overlayError.classList.add("overlay__error--visible");
+});
+socket.on("room-already-started", () => {
+  const overlayError = document.querySelector(".overlay__error");
+  overlayError.innerHTML = `
+      <div>
+        <h3>Game has already started</h3>
+        <p>You cannot join a game that has already started</p>
+      </div>`;
+  overlayError.classList.add("overlay__error--visible");
+});
+socket.on("room-full", () => {
+  const overlayError = document.querySelector(".overlay__error");
+  overlayError.innerHTML = `
       <div>
         <h3>Room is full</h3>
         <p>Maximum amount of players for this room has been reached. 
           <a href="javascript:window.location.href=window.location.href">Try again...</a>
         </p>
-      </div>`)
-);
-
-const readyBtn = document.querySelector(".lobby__ready-btn");
-readyBtn.addEventListener("click", () => {
-  socket.emit("player-ready");
+      </div>`;
+  overlayError.classList.add("overlay__error--visible");
 });
 
-socket.on("player-ready", () => console.log("Player ready"));
-
-socket.on("countdown", time => {
-  console.log(time);
-});
-
-socket.on("game-started", () => console.log("Game started!"));
-
+// Lobby events
 socket.on("player-joined", player => {
   console.log("Player Joined");
   addPlayer(player);
 });
+
 socket.on("player-disconnected", id => {
   console.log("Player Disconnected");
   removePlayer(id);
+
+  if (gameStatus === "starting") toggleLobby();
 });
 
-/* const updateGame = data => {
-  const players = document.querySelector(".lobby__players");
-  game = data;
-  players.innerHTML = "";
-  game.players.forEach(player => {
-    players.insertAdjacentHTML("beforeend", `<li>${player.name}</li>`);
-  });
-}; */
+const readyBtn = document.querySelector(".lobby__ready-btn");
+readyBtn.addEventListener("click", () => {
+  socket.emit("player-ready");
+  updatePlayerStatus(socket.id, "ready");
+});
 
-const cards = [
-  {
-    name: "sigma",
-    img: "https://img.icons8.com/dusk/64/000000/sigma.png"
-  },
-  {
-    name: "sigma",
-    img: "https://img.icons8.com/dusk/64/000000/sigma.png"
-  },
-  {
-    name: "pi",
-    img: "https://img.icons8.com/dusk/64/000000/pi.png"
-  },
-  {
-    name: "pi",
-    img: "https://img.icons8.com/dusk/64/000000/pi.png"
-  },
-  {
-    name: "gamma",
-    img: "https://img.icons8.com/dusk/64/000000/gamma.png"
-  },
-  {
-    name: "gamma",
-    img: "https://img.icons8.com/dusk/64/000000/gamma.png"
+socket.on("player-ready", player => {
+  updatePlayerStatus(player.id, player.status);
+});
+
+socket.on("countdown", time => {
+  if (time === 10) {
+    gameStatus = "starting";
+    toggleLobby();
   }
-];
+  updateCountdown(time);
+});
 
-/*
-const gameSetup = () => {
-  const cardElements = document.querySelectorAll(".card");
+// Game events
+socket.on("game-setup", game => {
+  createBoard(game.board);
+});
 
+socket.on("game-started", () => {
+  gameStatus = "started";
+  initGame();
+  console.log("Game started!");
+});
+
+/* const gameSetup = () => {
   let unusedCards = cards;
 
   cardElements.forEach(element => {
