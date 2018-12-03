@@ -84,14 +84,16 @@ const initEvents = server => {
           game.status = 'lobby'
         }
 
-        if (game.players.length === 0) {
-          games.splice(gameIndex, 1)
-        }
-
         game.players.splice(playerIndex, 1)
         socket.broadcast
           .to(socket.currentGame)
           .emit('player-disconnected', player.id)
+
+        // If no players remain => remove game
+        if (game.players.length === 0) {
+          console.log('No players left in game')
+          games.splice(gameIndex, 1)
+        }
       }
     })
 
