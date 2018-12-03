@@ -166,6 +166,26 @@ export const displayFinishOverlay = (placement, time) => {
   }
 };
 
+export const displaySPFinishOverlay = time => {
+  const finishOverlayNode = document.querySelector(".game__finish-overlay");
+  finishOverlayNode.classList.add("game__finish-overlay--open");
+  finishOverlayNode.querySelector("p > span").innerText = (
+    Math.round((time / 1000) * 10) / 10
+  ).toFixed(1);
+};
+
+export const hideFinishOverlay = () => {
+  const finishOverlayNode = document.querySelector(".game__finish-overlay");
+  finishOverlayNode.classList.remove("game__finish-overlay--open");
+};
+
+export const clearBoard = () => {
+  const memoryNode = document.querySelector(".memory");
+  while (memoryNode.firstChild) {
+    memoryNode.removeChild(memoryNode.firstChild);
+  }
+};
+
 /* ===== BROWSE ===== */
 const browseListItemTemplate = game => `
   <div class="browse__list-item" data-gameId="${game.id}">

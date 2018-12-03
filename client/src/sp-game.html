@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Memory</title>
+
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto+Mono"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Poppins:300,400,700"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="game">
+      <div class="game__container">
+        <!-- <div class="game__countdown"><h1>10</h1></div> -->
+        <div class="game__finish-overlay">
+          <h1></h1>
+          <p>You finished in <span></span> seconds</p>
+          <button class="game__replay">Replay</button>
+        </div>
+        <div class="memory"></div>
+      </div>
+      <div class="game__side">
+        <div class="game__timer">
+          <h2><span>0.0</span><span>s</span></h2>
+        </div>
+        <div class="game__players">
+          <a href="index.html" class="game__exit">Exit Training</a>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/sp-game.js"></script>
+  </body>
+</html>
