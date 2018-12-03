@@ -165,3 +165,31 @@ export const displayFinishOverlay = (placement, time) => {
     ).innerText = `You finished in #${placement + 1} place.`;
   }
 };
+
+/* ===== BROWSE ===== */
+const browseListItemTemplate = game => `
+  <div class="browse__list-item" data-gameId="${game.id}">
+    <div><p>${game.name}</p></div>
+    <div><p>${game.settings.pairs}</p></div>
+    <div><p>${game.players.length}/${game.settings.maxPlayers}</p></div>
+  </div>
+`;
+
+export const addBrowseListItems = games => {
+  const listNode = document.querySelector(".browse__list-body");
+  games.forEach(game => {
+    listNode.insertAdjacentHTML("beforeend", browseListItemTemplate(game));
+  });
+};
+
+export const clearBrowseList = () => {
+  const listNode = document.querySelector(".browse__list-body");
+  while (listNode.firstChild) {
+    listNode.removeChild(listNode.firstChild);
+  }
+};
+
+export const toggleJoinGameModal = game => {
+  const modalNode = document.querySelector(".modal");
+  modalNode.classList.toggle("modal--open");
+};

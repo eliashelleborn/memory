@@ -5,9 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Memory - Browse</title>
+
+    <link
+      href="https://fonts.googleapis.com/css?family=Poppins:300,400,700"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css"
+    />
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <ul class="browse"></ul>
+    <div class="modal">
+      <div class="modal__wrapper">
+        <h1>Join Game</h1>
+        <div class="modal__form">
+          <label for="">Enter nickname:</label> <input type="text" />
+        </div>
+        <div class="modal__buttons">
+          <button>Join</button> <button>Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="browse">
+      <a href="index.html" class="browse__back-btn"> Go Back </a>
+      <div class="browse__container">
+        <div class="browse__header">
+          <h1>BROWSE</h1>
+          <button class="browse__refresh">Refresh</button>
+        </div>
+        <div class="browse__body">
+          <div class="browse__list-head">
+            <div><p>Name</p></div>
+            <div><p>Pairs</p></div>
+            <div><p>Players</p></div>
+          </div>
+          <div class="browse__list-body"></div>
+        </div>
+        <div class="browse__footer">
+          <button class="browse__create">Create</button>
+        </div>
+      </div>
+    </div>
 
     <script src="js/browse.js"></script>
   </body>
