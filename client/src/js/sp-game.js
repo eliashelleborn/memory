@@ -5,7 +5,7 @@ import cards from "./cards";
 const game = {
   board: null,
   settings: {
-    pairs: 2
+    pairs: 10
   }
 };
 
