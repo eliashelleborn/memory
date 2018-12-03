@@ -27,6 +27,8 @@ const initEvents = server => {
     socket.on('join-room', data => {
       const { game, gameIndex } = getGame(data.room)
 
+      console.log(gameIndex)
+
       // If game exists
       if (gameIndex >= 0) {
         if (game.status === 'lobby') {
@@ -76,23 +78,24 @@ const initEvents = server => {
     socket.on('disconnect', () => {
       if (socket.currentGame) {
         const { game, gameIndex } = getGame(socket.currentGame)
-        const { player, playerIndex } = getPlayer(socket)
+        if (gameIndex >= 0) {
+          const { player, playerIndex } = getPlayer(socket)
 
-        if (game.status === 'starting') {
-          // Remove player and clear game interval
-          clearInterval(game.interval)
-          game.status = 'lobby'
-        }
+          if (game.status === 'starting') {
+            // Remove player and clear game interval
+            clearInterval(game.interval)
+            game.status = 'lobby'
+          }
 
-        game.players.splice(playerIndex, 1)
-        socket.broadcast
-          .to(socket.currentGame)
-          .emit('player-disconnected', player.id)
+          game.players.splice(playerIndex, 1)
+          socket.broadcast
+            .to(socket.currentGame)
+            .emit('player-disconnected', player.id)
 
-        // If no players remain => remove game
-        if (game.players.length === 0) {
-          console.log('No players left in game')
-          games.splice(gameIndex, 1)
+          // If no players remain => remove game
+          if (game.players.length === 0) {
+            games.splice(gameIndex, 1)
+          }
         }
       }
     })
@@ -126,6 +129,11 @@ const initEvents = server => {
 
       if (game.placements.length === game.players.length) {
         io.to(socket.currentGame).emit('game-ended')
+        setTimeout(() => {
+          games.splice(gameIndex, 1)
+          console.log('Game ' + game.id + ' removed.')
+          console.log(games)
+        }, 3000)
       }
     })
   })
