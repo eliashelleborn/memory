@@ -40,7 +40,9 @@ const controller = {
   },
 
   create (req, res) {
-    const { name, password, pairs, maxPlayers } = req.body
+    let { name, password, pairs, maxPlayers } = req.body
+
+    if (pairs > 10) pairs = 10
 
     const id = makeid()
     const newGame = {
