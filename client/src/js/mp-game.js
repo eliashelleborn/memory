@@ -13,7 +13,8 @@ import {
   updatePlayerProgress,
   roomNotFound,
   gameAlreadyStarted,
-  roomFull
+  roomFull,
+  displayFinishOverlay
 } from "./dom";
 
 const socket = io("http://localhost:3030");
@@ -80,9 +81,9 @@ socket.on("game-setup", game => {
   addGamePlayers(game, socket);
 });
 
-socket.on("game-started", () => {
+socket.on("game-started", game => {
   gameStatus = "started";
-  initGame(socket);
+  initGame(game, socket);
 });
 
 socket.on("player-clicked", ({ player, clicks }) => {
@@ -91,6 +92,15 @@ socket.on("player-clicked", ({ player, clicks }) => {
 
 socket.on("player-completed-pair", ({ player, pairsCompleted }) => {
   updatePlayerProgress(player, pairsCompleted);
+});
+
+socket.on("player-finished", ({ placement, player }) => {
+  // If finished player is this client
+  if (player.id === socket.id) {
+    displayFinishOverlay(placement, player.stats.time);
+  } else {
+    console.log("Other player finished with time: " + player.stats.time);
+  }
 });
 
 /*

@@ -11,6 +11,10 @@
       rel="stylesheet"
     />
     <link
+      href="https://fonts.googleapis.com/css?family=Roboto+Mono"
+      rel="stylesheet"
+    />
+    <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css"
     />
@@ -34,10 +38,16 @@
     <div class="game">
       <div class="game__container">
         <div class="game__countdown"><h1>10</h1></div>
+        <div class="game__finish-overlay">
+          <h1></h1>
+          <p>Your time is <span></span>s</p>
+        </div>
         <div class="memory"></div>
       </div>
       <div class="game__side">
-        <div class="game__timer"><h2>0.00s</h2></div>
+        <div class="game__timer">
+          <h2><span>0.0</span><span>s</span></h2>
+        </div>
         <div class="game__players"></div>
       </div>
     </div>

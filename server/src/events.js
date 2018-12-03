@@ -43,7 +43,8 @@ const initEvents = server => {
               status: 'waiting',
               stats: {
                 pairsCompleted: 0,
-                clicks: 0
+                clicks: 0,
+                time: null
               }
             }
             game.players.push(newPlayer)
@@ -111,6 +112,16 @@ const initEvents = server => {
         pairsCompleted: player.stats.pairsCompleted
       })
     })
+    socket.on('player-finished', () => {
+      const { game } = getGame(socket.currentGame)
+      const { player } = getPlayer(socket)
+      player.stats.time = Date.now() - game.startTime
+      game.placements.push(player.id)
+      io.to(socket.currentGame).emit('player-finished', {
+        placement: game.placements.indexOf(player.id),
+        player
+      })
+    })
   })
 }
 
@@ -125,8 +136,9 @@ const prepareGame = (io, socket, game) => {
     io.to(game.id).emit('countdown', time)
     if (time === 0) {
       clearInterval(game.interval)
-      io.to(game.id).emit('game-started')
       game.status = 'started'
+      game.startTime = Date.now()
+      io.to(game.id).emit('game-started', game)
     }
     time--
   }, 1000)

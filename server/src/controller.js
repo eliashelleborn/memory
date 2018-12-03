@@ -8,10 +8,11 @@ export const games = [
     interval: null,
     settings: {
       password: '',
-      pairs: 10,
+      pairs: 2,
       maxPlayers: 2
     },
     board: [],
+    placements: [],
     players: [
       /* {
         name: 'Elias',
@@ -33,6 +34,7 @@ export const games = [
       maxPlayers: 2
     },
     board: [],
+    placements: [],
     players: [
       /* {
         name: 'Elias',

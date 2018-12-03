@@ -139,3 +139,26 @@ export const updatePlayerProgress = (player, pairsCompleted) => {
   console.log(pairsCompleted);
   progressNode.children[pairsCompleted - 1].classList.add("completed");
 };
+
+export const updateTimer = time => {
+  const timerNode = document.querySelector(
+    ".game__timer > h2 > span:first-child"
+  );
+  timerNode.innerText = time;
+};
+
+export const displayFinishOverlay = (placement, time) => {
+  const finishOverlayNode = document.querySelector(".game__finish-overlay");
+  finishOverlayNode.classList.add("game__finish-overlay--open");
+  finishOverlayNode.querySelector("p > span").innerText = (
+    Math.round((time / 1000) * 10) / 10
+  ).toFixed(1);
+
+  if (placement === 0) {
+    finishOverlayNode.querySelector("h1").innerText = "You Won!";
+  } else {
+    finishOverlayNode.querySelector(
+      "h1"
+    ).innerText = `You finished in #${placement + 1} place.`;
+  }
+};

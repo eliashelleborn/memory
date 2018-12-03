@@ -1,18 +1,25 @@
-import { createCard, updatePlayerClicks, updatePlayerProgress } from "./dom";
+import {
+  createCard,
+  updatePlayerClicks,
+  updatePlayerProgress,
+  updateTimer,
+  displayFinishOverlay
+} from "./dom";
 import cards from "./cards";
 
 let prevCard = null;
 let completedPairs = 0;
 let clicks = 0;
 
-export const initGame = socket => {
+export const initGame = (game, socket) => {
   const cardNodes = document.querySelectorAll(".card");
   cardNodes.forEach(card => {
-    card.addEventListener("click", () => clickHandler(card, socket));
+    card.addEventListener("click", () => clickHandler(card, game, socket));
   });
+  startTimer(game.startTime);
 };
 
-const clickHandler = (card, socket) => {
+const clickHandler = (card, game, socket) => {
   const cardName = card.getAttribute("data-cardName");
   const isMP = !!socket;
 
@@ -30,6 +37,10 @@ const clickHandler = (card, socket) => {
       updatePlayerProgress(socket.id, completedPairs);
       completeCards(flippedCards);
       prevCard = null;
+
+      if (completedPairs === game.settings.pairs) {
+        socket.emit("player-finished");
+      }
     } else {
       setTimeout(() => {
         unflipCards(flippedCards);
@@ -41,6 +52,14 @@ const clickHandler = (card, socket) => {
   }
 };
 
+export const startTimer = startTime => {
+  const interval = setInterval(() => {
+    const time = Date.now() - startTime;
+    const formattedTime = (Math.round((time / 1000) * 10) / 10).toFixed(1);
+    updateTimer(formattedTime);
+  }, 100);
+};
+
 export const createBoard = board => {
   board.forEach(cardIndex => {
     createCard(cards[cardIndex]);
@@ -48,17 +67,14 @@ export const createBoard = board => {
 };
 
 export const unflipCards = cards => {
-  console.log("Unflip");
   cards.forEach(card => {
     card.classList.toggle("flipped");
   });
 };
 
 export const completeCards = cards => {
-  console.log("Complete");
   cards.forEach(card => {
     card.classList.add("completed");
   });
   unflipCards(cards);
-  if (completedPairs === 3) alert("YOU WIN!");
 };
