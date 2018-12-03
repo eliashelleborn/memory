@@ -83,6 +83,7 @@ socket.on("countdown", time => {
 
 /* ===== GAME EVENTS ===== */
 socket.on("game-setup", game => {
+  console.log(game);
   createBoard(game.board);
   addGamePlayers(game, socket);
 });

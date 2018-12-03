@@ -27,8 +27,6 @@ const initEvents = server => {
     socket.on('join-room', data => {
       const { game, gameIndex } = getGame(data.room)
 
-      console.log(gameIndex)
-
       // If game exists
       if (gameIndex >= 0) {
         if (game.status === 'lobby') {
@@ -38,10 +36,11 @@ const initEvents = server => {
             // Join room if game isnt full
             socket.join(data.room)
             socket.currentGame = game.id
+            game.deletionTimout = null
 
             const newPlayer = {
               id: socket.id,
-              name: data.user.name,
+              name: data.user.name || 'Anon',
               status: 'waiting',
               stats: {
                 pairsCompleted: 0,
@@ -70,7 +69,11 @@ const initEvents = server => {
 
       // Start countdown when game is full and all players are ready
       const playersReady = game.players.every(p => p.status === 'ready')
-      if (game.players.length === game.settings.maxPlayers && playersReady) {
+      if (
+        game.players.length.toString() ===
+          game.settings.maxPlayers.toString() &&
+        playersReady
+      ) {
         prepareGame(io, socket, game)
       }
     })
@@ -131,8 +134,6 @@ const initEvents = server => {
         io.to(socket.currentGame).emit('game-ended')
         setTimeout(() => {
           games.splice(gameIndex, 1)
-          console.log('Game ' + game.id + ' removed.')
-          console.log(games)
         }, 3000)
       }
     })
@@ -159,7 +160,7 @@ const prepareGame = (io, socket, game) => {
 }
 
 const createBoard = pairCount => {
-  const cards = Array.from(Array(pairCount).keys())
+  const cards = Array.from(Array(parseInt(pairCount)).keys())
   const board = [...cards, ...cards]
   board.sort(() => Math.random() - 0.5)
   return board

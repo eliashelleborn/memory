@@ -213,3 +213,6 @@ export const toggleJoinGameModal = game => {
   const modalNode = document.querySelector(".modal");
   modalNode.classList.toggle("modal--open");
 };
+
+/* ===== CREATE ===== */
+export const displayErrors = errors => {};

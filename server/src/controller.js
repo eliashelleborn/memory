@@ -1,7 +1,7 @@
 import httpStatus from 'http-status'
 
 export const games = [
-  {
+  /* {
     id: '1',
     name: 'Test game 1',
     status: 'lobby',
@@ -14,74 +14,64 @@ export const games = [
     },
     board: [],
     placements: [],
-    players: [
-      /* {
-        name: 'Elias',
-        stats: {
-          pairsCompleted: 0,
-          clicks: 0
-        }
-      } */
-    ]
-  },
+    players: []
+  }, */
   {
     id: '2',
-    name: 'Test game 2',
+    name: 'Test',
     status: 'lobby',
     startTime: null,
     interval: null,
     settings: {
       password: '',
-      pairs: 10,
+      pairs: 1,
       maxPlayers: 2
     },
     board: [],
     placements: [],
-    players: [
-      /* {
-        name: 'Elias',
-        stats: {
-          pairsCompleted: 0,
-          clicks: 0
-        }
-      } */
-    ]
+    players: []
   }
 ]
+
+function makeid () {
+  var text = ''
+  var possible =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+
+  for (var i = 0; i < 5; i++) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length))
+  }
+
+  return text
+}
 
 const controller = {
   /**
    * * /api/browse?search=[value]
    */
   list (req, res) {
-    return res.json(games)
+    const availableGames = games.filter(game => game.status === 'lobby')
+    return res.json(availableGames)
   },
 
   create (req, res) {
     const { name, password, pairs, maxPlayers } = req.body
 
-    if (!name) {
-      res.status(httpStatus.BAD_REQUEST)
-      return res.json({ message: 'No username given' })
-    }
-
+    const id = makeid()
     const newGame = {
-      id: Math.random(),
+      id: id,
+      name: name || id,
       status: 'lobby',
+      startTime: null,
+      interval: null,
       settings: {
         password: password || '',
         pairs: pairs || 10,
         maxPlayers: maxPlayers || 2
       },
-      players: [
-        {
-          name: name,
-          stats: {
-            pairsCompleted: 0,
-            clicks: 0
-          }
-        }
-      ]
+      players: [],
+      placements: [],
+      board: []
     }
 
     games.push(newGame)

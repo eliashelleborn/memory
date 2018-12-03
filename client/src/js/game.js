@@ -69,7 +69,7 @@ const clickHandler = (card, game, socket) => {
       completeCards(flippedCards);
       prevCard = null;
 
-      if (completedPairs === game.settings.pairs) {
+      if (completedPairs === parseInt(game.settings.pairs)) {
         if (isMP) {
           socket.emit("player-finished");
         } else {
