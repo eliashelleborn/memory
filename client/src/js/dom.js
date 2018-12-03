@@ -118,8 +118,11 @@ const playerTemplate = (player, isMe, pairCount) => {
         <span>Clicks: </span><span>0</span>
       </div>
 
+      
       <div class="player__progress">
-        ${progressBlocks}
+        <div class='player__progress-blocks'>
+          ${progressBlocks}
+        </div>
       </div>
     </div>
   `;
@@ -134,7 +137,7 @@ export const updatePlayerClicks = (player, clicks) => {
 
 export const updatePlayerProgress = (player, pairsCompleted) => {
   const progressNode = document.querySelector(
-    `[data-player="${player}"] .player__progress`
+    `[data-player="${player}"] .player__progress-blocks`
   );
   console.log(pairsCompleted);
   progressNode.children[pairsCompleted - 1].classList.add("completed");

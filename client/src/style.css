@@ -47,18 +47,25 @@ p {
   opacity: 1;
   visibility: visible;
   transition: opacity 0.3s ease, visibility 0s ease 0.5s;
-  background: #2b5876; /* fallback for old browsers */
-  background: -webkit-linear-gradient(
-    to right,
-    #4e4376,
-    #2b5876
-  ); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(
-    to right,
-    #4e4376,
-    #2b5876
-  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: #2b5876;
+  background: -webkit-linear-gradient(to right, #4e4376, #2b5876);
+  background: linear-gradient(to right, #4e4376, #2b5876);
+  /* background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  background-size: 400% 400%;
+  animation: Gradient 15s ease infinite; */
 }
+
+/* @keyframes Gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+} */
 .overlay--hidden {
   opacity: 0;
   visibility: hidden;
@@ -342,6 +349,20 @@ p {
 }
 
 .player__progress {
+  margin-top: 5px;
+  font-size: 14px;
+  position: relative;
+}
+
+/* .player__progress span {
+  position: absolute;
+  top: 6px;
+  right: 7px;
+  color: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+} */
+
+.player__progress-blocks {
   display: flex;
   height: 20px;
   width: 100%;
@@ -350,15 +371,15 @@ p {
   padding: 3px;
 }
 
-.player__progress > div {
+.player__progress-blocks > div {
   flex: 1;
   margin-right: 3px;
 }
 
-.player__progress > div:last-child {
+.player__progress-blocks > div:last-child {
   margin-right: 0;
 }
 
-.player__progress > div.completed {
+.player__progress-blocks > div.completed {
   background-color: #20bf55;
 }

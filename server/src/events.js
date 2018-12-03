@@ -113,7 +113,7 @@ const initEvents = server => {
       })
     })
     socket.on('player-finished', () => {
-      const { game } = getGame(socket.currentGame)
+      const { game, gameIndex } = getGame(socket.currentGame)
       const { player } = getPlayer(socket)
       player.stats.time = Date.now() - game.startTime
       game.placements.push(player.id)
@@ -121,6 +121,10 @@ const initEvents = server => {
         placement: game.placements.indexOf(player.id),
         player
       })
+
+      if (game.placements.length === game.players.length) {
+        io.to(socket.currentGame).emit('game-ended')
+      }
     })
   })
 }

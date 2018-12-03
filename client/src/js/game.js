@@ -10,6 +10,7 @@ import cards from "./cards";
 let prevCard = null;
 let completedPairs = 0;
 let clicks = 0;
+export let timer = null;
 
 export const initGame = (game, socket) => {
   const cardNodes = document.querySelectorAll(".card");
@@ -53,7 +54,7 @@ const clickHandler = (card, game, socket) => {
 };
 
 export const startTimer = startTime => {
-  const interval = setInterval(() => {
+  timer = setInterval(() => {
     const time = Date.now() - startTime;
     const formattedTime = (Math.round((time / 1000) * 10) / 10).toFixed(1);
     updateTimer(formattedTime);

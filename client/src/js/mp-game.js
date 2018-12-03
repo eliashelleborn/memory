@@ -1,6 +1,12 @@
 import io from "socket.io-client";
 import cards from "./cards";
-import { createBoard, unflipCards, completeCards, initGame } from "./game";
+import {
+  createBoard,
+  unflipCards,
+  completeCards,
+  initGame,
+  timer
+} from "./game";
 import {
   addLobbyPlayer,
   removeLobbyPlayer,
@@ -101,6 +107,11 @@ socket.on("player-finished", ({ placement, player }) => {
   } else {
     console.log("Other player finished with time: " + player.stats.time);
   }
+});
+
+socket.on("game-ended", game => {
+  console.log("Game Ended!");
+  clearInterval(timer);
 });
 
 /*
