@@ -20,7 +20,8 @@ import {
   roomNotFound,
   gameAlreadyStarted,
   roomFull,
-  displayFinishOverlay
+  displayFinishOverlay,
+  displayPlacement
 } from "./dom";
 
 const socket = io("http://localhost:3030");
@@ -108,6 +109,7 @@ socket.on("player-finished", ({ placement, player }) => {
   } else {
     console.log("Other player finished with time: " + player.stats.time);
   }
+  displayPlacement(player.id, placement);
 });
 
 socket.on("game-ended", game => {

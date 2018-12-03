@@ -16,21 +16,6 @@ export const games = [
     placements: [],
     players: []
   }, */
-  {
-    id: '2',
-    name: 'Test',
-    status: 'lobby',
-    startTime: null,
-    interval: null,
-    settings: {
-      password: '',
-      pairs: 1,
-      maxPlayers: 2
-    },
-    board: [],
-    placements: [],
-    players: []
-  }
 ]
 
 function makeid () {

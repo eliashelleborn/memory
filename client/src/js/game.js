@@ -4,7 +4,8 @@ import {
   updatePlayerProgress,
   updateTimer,
   displayFinishOverlay,
-  displaySPFinishOverlay
+  displaySPFinishOverlay,
+  displayPlacement
 } from "./dom";
 import cards from "./cards";
 

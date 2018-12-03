@@ -15,7 +15,7 @@ export const addGameInfo = game => {
 export const addLobbyPlayer = player => {
   const playersNode = document.querySelector(".lobby__players");
   const template = `
-    <div class='lobby__player' data-player='${player.id}'>
+    <div class='lobby__player' data-lobby-player='${player.id}'>
       <p>${player.name}</p>
       <p class='lobby__player-status'>${player.status}</p>
     </div>
@@ -30,7 +30,7 @@ export const removeLobbyPlayer = id => {
 
 export const updatePlayerStatus = (id, status) => {
   const statusNode = document.querySelector(
-    `[data-player='${id}'] .lobby__player-status`
+    `[data-lobby-player='${id}'] .lobby__player-status`
   );
   statusNode.classList.toggle("lobby__player-status--ready");
   statusNode.innerText = status;
@@ -109,6 +109,10 @@ const playerTemplate = (player, isMe, pairCount) => {
   }
   return `
     <div class="player" data-player="${player.id}">
+      <div class='player__placement'>
+        <span></span>
+      </div>
+
       <div class="player__header">
         <h3 class="player__name">${player.name}</h3>
         <p class="player__you">${isMe ? "(You)" : ""}</p>
@@ -186,6 +190,14 @@ export const clearBoard = () => {
   }
 };
 
+export const displayPlacement = (player, placement) => {
+  const playerPlacementNode = document.querySelector(
+    `[data-player="${player}"] .player__placement`
+  );
+  playerPlacementNode.firstElementChild.innerText = placement + 1;
+  playerPlacementNode.classList.add("player__placement--set");
+};
+
 /* ===== BROWSE ===== */
 const browseListItemTemplate = game => `
   <div class="browse__list-item" data-gameId="${game.id}">
@@ -213,6 +225,3 @@ export const toggleJoinGameModal = game => {
   const modalNode = document.querySelector(".modal");
   modalNode.classList.toggle("modal--open");
 };
-
-/* ===== CREATE ===== */
-export const displayErrors = errors => {};
