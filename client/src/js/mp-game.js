@@ -16,7 +16,7 @@ import {
   roomFull
 } from "./dom";
 
-const socket = io("http://192.168.0.6:3030");
+const socket = io("http://localhost:3030");
 const urlParams = new URLSearchParams(window.location.search);
 
 let gameStatus = "lobby";

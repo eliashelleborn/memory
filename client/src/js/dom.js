@@ -32,6 +32,7 @@ export const updatePlayerStatus = (id, status) => {
   const statusNode = document.querySelector(
     `[data-player='${id}'] .lobby__player-status`
   );
+  statusNode.classList.toggle("lobby__player-status--ready");
   statusNode.innerText = status;
 };
 
@@ -81,7 +82,6 @@ export const roomFull = () => {
 /* ===== GAME ===== */
 export const createCard = card => {
   const memoryNode = document.querySelector(".memory");
-  console.log(card);
   const template = `
     <div class="card" data-cardName="${card.name}">
       <div class="card__front" style="background-image: url(${card.img})"></div>
@@ -136,5 +136,6 @@ export const updatePlayerProgress = (player, pairsCompleted) => {
   const progressNode = document.querySelector(
     `[data-player="${player}"] .player__progress`
   );
-  progressNode.childNodes[pairsCompleted].classList.add("completed");
+  console.log(pairsCompleted);
+  progressNode.children[pairsCompleted - 1].classList.add("completed");
 };

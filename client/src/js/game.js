@@ -25,6 +25,7 @@ const clickHandler = (card, socket) => {
 
   if (prevCard !== null) {
     if (cardName === prevCard) {
+      completedPairs++;
       if (isMP) socket.emit("player-completed-pair");
       updatePlayerProgress(socket.id, completedPairs);
       completeCards(flippedCards);
@@ -55,11 +56,9 @@ export const unflipCards = cards => {
 
 export const completeCards = cards => {
   console.log("Complete");
-  socket.emit("pairCompleted");
   cards.forEach(card => {
     card.classList.add("completed");
   });
-  completedPairs++;
   unflipCards(cards);
   if (completedPairs === 3) alert("YOU WIN!");
 };

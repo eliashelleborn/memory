@@ -227,10 +227,10 @@ p {
 }
 .card__front {
   transform: rotateY(180deg);
-  background-size: contain;
+  background-size: 80%;
   background-position: center;
   background-repeat: no-repeat;
-
+  background-color: rgba(255, 255, 255, 0.05);
   z-index: 10;
   transition: all 0.5 ease;
 }
