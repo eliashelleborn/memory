@@ -15,3 +15,5 @@ Same procedure for both client and server
   npm install
   npm run dev
 ```
+
+Now open `localhost:1234/index.html`
