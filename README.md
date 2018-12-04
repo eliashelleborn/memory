@@ -1,4 +1,4 @@
-# Memory
+# Multiplayer Memory
 
 Yrgo JavaScript Assignment
 
@@ -17,3 +17,9 @@ Same procedure for both client and server
 ```
 
 Now open `localhost:1234/index.html`
+
+## User Tests
+
+- Linn Johansson
+
+> More coming soon
