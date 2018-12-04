@@ -21,5 +21,4 @@ Now open `localhost:1234/index.html`
 ## User Tests
 
 - Linn Johansson
-
-> More coming soon
+- Mattias Rådemar
