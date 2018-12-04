@@ -22,9 +22,9 @@ createBtn.addEventListener("click", () => {
       if (json.errorMessage) {
         console.log(json.errorMessage);
       } else {
-        window.location = `http://localhost:1234/mp-game.html?game=${
-          json.id
-        }&name=${nicknameInput.value}`;
+        window.location = `mp-game.html?game=${json.id}&name=${
+          nicknameInput.value
+        }`;
       }
     });
 });

@@ -29,7 +29,7 @@ const initEventListeners = () => {
 const joinBtn = document.querySelector(".modal__buttons button:first-child");
 joinBtn.addEventListener("click", () => {
   const nicknameInput = document.querySelector(".modal__form input");
-  window.location = `http://localhost:1234/mp-game.html?game=${selectedGame}&name=${
+  window.location = `mp-game.html?game=${selectedGame}&name=${
     nicknameInput.value
   }`;
 });
